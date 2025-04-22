@@ -8,13 +8,16 @@ import { fileURLToPath } from 'node:url'
 // 使用fs读取package.json内容
 import packageJSON from './package.json' assert { type: 'json' }
 
+// 导出匿名token变量，供其他模块使用
+export const anonymousToken = '';
 
-const tmpPath = os.tmpdir()
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-if (!fs.existsSync(path.resolve(tmpPath, 'anonymous_token'))) {
-  fs.writeFileSync(path.resolve(tmpPath, 'anonymous_token'), '', 'utf-8')
-}
+// 移除临时文件操作，避免Deno环境中的文件系统访问错误
+// const tmpPath = os.tmpdir()
+// if (!fs.existsSync(path.resolve(tmpPath, 'anonymous_token'))) {
+//   fs.writeFileSync(path.resolve(tmpPath, 'anonymous_token'), '', 'utf-8')
+// }
 
 let firstRun = true
 /** @type {Record<string, any>} */

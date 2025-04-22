@@ -11,17 +11,27 @@ import os from 'node:os'
 import { URL, URLSearchParams } from 'node:url'
 // request.debug = true // 开启可看到更详细信息
 
-let anonymous_token;
+// 导入主模块中的匿名token变量
+let anonymous_token = '';
+
+// 尝试从环境变量获取token
 try {
-  const tmpPath = os.tmpdir();
-  anonymous_token = fs.readFileSync(
-    path.resolve(tmpPath, './anonymous_token'),
-    'utf-8',
-  );
+  // Deno环境下优先使用环境变量
+  if (typeof Deno !== 'undefined') {
+    anonymous_token = Deno.env.get("ANONYMOUS_TOKEN") || "";
+  } 
+  // Node环境下尝试读取文件
+  else {
+    const tmpPath = os.tmpdir();
+    anonymous_token = fs.readFileSync(
+      path.resolve(tmpPath, './anonymous_token'),
+      'utf-8',
+    );
+  }
 } catch (error) {
-  // 文件不存在时使用环境变量或默认值
-  anonymous_token = Deno.env.get("ANONYMOUS_TOKEN") || "";
-  console.warn("无法读取 token 文件，使用环境变量替代");
+  // 出错时使用空字符串
+  anonymous_token = "";
+  console.warn("无法读取token，使用空值替代");
 }
 
 const chooseUserAgent = (ua = false) => {
