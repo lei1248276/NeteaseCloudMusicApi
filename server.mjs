@@ -12,8 +12,14 @@ import { cookieToJson } from './util/index.mjs'
 // import { middleware as cache } from './util/apicache.mjs'
 import apicache from './util/apicache.mjs'
 
+// 检测是否在Deno环境中运行
+const isDeno = typeof Deno !== 'undefined';
+
 // 使用fs读取package.json内容
-const packageJSON = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf-8'))
+const packageJSON = isDeno 
+  ? { version: '4.14.0' } // Deno环境中提供一个硬编码版本
+  : JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf-8'));
+  
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
@@ -87,14 +93,34 @@ async function getModulesDefinitions(
     return route
   }
 
+  // 在Deno环境中忽略可能存在依赖问题的模块
+  const skipModulesInDeno = isDeno ? ['cloud_match.mjs', 'cloud_upload.mjs'] : [];
+  
   const modulePromises = files
     .reverse()
     .filter((file) => file.endsWith('.mjs'))
+    .filter((file) => !isDeno || !skipModulesInDeno.includes(file)) // 在Deno环境中跳过问题模块
     .map(async (file) => {
       const identifier = file.split('.').shift()
       const route = parseRoute(file)
       const modulePath = path.join(modulesPath, file)
-      const module = doRequire ? (await import(modulePath)).default : modulePath
+      
+      let module;
+      try {
+        module = doRequire ? (await import(modulePath)).default : modulePath
+      } catch (error) {
+        console.error(`❌ 无法加载模块 ${file}: ${error.message}`);
+        // 为有问题的模块提供一个模拟实现
+        module = (query, request) => { 
+          return Promise.resolve({
+            status: 501,
+            body: { 
+              code: 501,
+              msg: `该功能在当前环境中不可用: ${error.message}` 
+            }
+          });
+        };
+      }
 
       return { identifier, route, module }
     })
@@ -115,6 +141,15 @@ async function getModulesDefinitions(
  * need to notify users to upgrade it manually.
  */
 async function checkVersion() {
+  // 在Deno环境中跳过版本检查
+  if (isDeno) {
+    return Promise.resolve({
+      status: VERSION_CHECK_RESULT.LATEST,
+      ourVersion: packageJSON.version,
+      npmVersion: packageJSON.version
+    });
+  }
+  
   return new Promise((resolve) => {
     exec('npm info NeteaseCloudMusicApi version', (err, stdout) => {
       if (!err) {
