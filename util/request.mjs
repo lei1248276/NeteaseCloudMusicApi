@@ -11,11 +11,18 @@ import os from 'node:os'
 import { URL, URLSearchParams } from 'node:url'
 // request.debug = true // 开启可看到更详细信息
 
-const tmpPath = os.tmpdir()
-const anonymous_token = fs.readFileSync(
-  path.resolve(tmpPath, './anonymous_token'),
-  'utf-8',
-)
+let anonymous_token;
+try {
+  const tmpPath = os.tmpdir();
+  anonymous_token = fs.readFileSync(
+    path.resolve(tmpPath, './anonymous_token'),
+    'utf-8',
+  );
+} catch (error) {
+  // 文件不存在时使用环境变量或默认值
+  anonymous_token = Deno.env.get("ANONYMOUS_TOKEN") || "";
+  console.warn("无法读取 token 文件，使用环境变量替代");
+}
 
 const chooseUserAgent = (ua = false) => {
   const userAgentList = {
