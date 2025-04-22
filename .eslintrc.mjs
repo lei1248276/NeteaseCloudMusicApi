@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   root: true,
   ignorePatterns: ['public/'],
   parserOptions: {
