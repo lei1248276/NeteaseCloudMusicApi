@@ -14,10 +14,14 @@ import { URL, URLSearchParams } from 'node:url'
 // 导入主模块中的匿名token变量
 let anonymous_token = '';
 
-// 尝试从环境变量获取token
+// 尝试从多个来源获取token
 try {
-  // Deno环境下优先使用环境变量
-  if (typeof Deno !== 'undefined') {
+  // 优先使用全局变量中的token（由generateConfig更新）
+  if (typeof globalThis._ANONYMOUS_TOKEN !== 'undefined' && globalThis._ANONYMOUS_TOKEN) {
+    anonymous_token = globalThis._ANONYMOUS_TOKEN;
+  }
+  // Deno环境下使用环境变量
+  else if (typeof Deno !== 'undefined') {
     anonymous_token = Deno.env.get("ANONYMOUS_TOKEN") || "";
   } 
   // Node环境下尝试读取文件
