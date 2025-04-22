@@ -2,17 +2,18 @@
   "name": "NeteaseCloudMusicApi",
   "version": "4.14.0",
   "description": "网易云音乐 NodeJS 版 API",
+  "type": "module",
   "scripts": {
-    "start": "node app.js",
+    "start": "node app.mjs",
     "test": "mocha -r intelli-espower-loader -t 60000 server.test.js main.test.js --exit",
-    "lint": "eslint \"**/*.{js,ts}\"",
-    "lint-fix": "eslint --fix \"**/*.{js,ts}\"",
+    "lint": "eslint \"**/*.{mjs,ts}\"",
+    "lint-fix": "eslint --fix \"**/*.{mjs,ts}\"",
     "prepare": "husky install",
     "pkgwin": "pkg . -t node18-win-x64 -C GZip -o bin/app --no-bytecode",
     "pkglinux": "pkg . -t node18-linux-x64 -C GZip -o bin/app --no-bytecode",
     "pkgmacos": "pkg . -t node18-macos-x64 -C GZip -o bin/app --no-bytecode"
   },
-  "bin": "./app.js",
+  "bin": "./app.mjs",
   "pkg": {
     "scripts": "module/*.js",
     "assets": [
@@ -38,7 +39,7 @@
     "音乐",
     "网易云音乐nodejs"
   ],
-  "main": "main.js",
+  "main": "main.mjs",
   "types": "./interface.d.ts",
   "engines": {
     "node": ">=12"
