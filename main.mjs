@@ -1,9 +1,9 @@
-import fs from 'fs'
-import path from 'path'
-import os from 'os'
+import fs from 'node:fs'
+import path from 'node:path'
+import os from 'node:os'
 import { cookieToJson } from './util/index.mjs'
 import { serveNcmApi, getModulesDefinitions } from './server.mjs'
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 
 // 使用fs读取package.json内容
 import packageJSON from './package.json' assert { type: 'json' }

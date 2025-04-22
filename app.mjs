@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import fs from 'fs'
-import path from 'path'
-import os from 'os'
+import fs from 'node:fs'
+import path from 'node:path'
+import os from 'node:os'
 import NeteaseCloudMusicApi from './main.mjs'
 
 const tmpPath = os.tmpdir()

@@ -1,6 +1,6 @@
 // 手机登录
 
-import crypto from "crypto"
+import crypto from "node:crypto"
 
 export default async (query, request) => {
   query.cookie.os = 'ios'

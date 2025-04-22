@@ -1,4 +1,4 @@
-import url from 'url'
+import url from 'node:url'
 import MemoryCache from './memory-cache.mjs'
 
 var t = {

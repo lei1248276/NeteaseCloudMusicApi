@@ -1,5 +1,5 @@
 // 注册账号
-import crypto from "crypto"
+import crypto from "node:crypto"
 
 export default (query, request) => {
   query.cookie.os = 'pc'

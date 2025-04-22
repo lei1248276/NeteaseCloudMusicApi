@@ -1,14 +1,14 @@
 import * as encrypt from './crypto.mjs'
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 import axios from 'axios'
 import { PacProxyAgent } from 'pac-proxy-agent'
-import http from 'http'
-import https from 'https'
+import http from 'node:http'
+import https from 'node:https'
 import tunnel from 'tunnel'
-import fs from 'fs'
-import path from 'path'
-import os from 'os'
-import { URL, URLSearchParams } from 'url'
+import fs from 'node:fs'
+import path from 'node:path'
+import os from 'node:os'
+import { URL, URLSearchParams } from 'node:url'
 // request.debug = true // 开启可看到更详细信息
 
 const tmpPath = os.tmpdir()
